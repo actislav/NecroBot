@@ -2,6 +2,7 @@
 
 using PoGo.NecroBot.Logic.State;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 #endregion
@@ -10,7 +11,7 @@ namespace PoGo.NecroBot.Logic.Logging
 {
     public static class Logger
     {
-        private static ILogger _logger;
+        private static List<ILogger> _loggers = new List<ILogger>();
         private static string _path;
 
         private static void Log(string message)
@@ -26,15 +27,19 @@ namespace PoGo.NecroBot.Logic.Logging
             }
         }
 
+        public static void AddLogger(params ILogger[] loggers)
+        {
+            _loggers.AddRange(loggers);
+        }
+
         /// <summary>
         ///     Set the logger. All future requests to <see cref="Write(string,LogLevel,ConsoleColor)" /> will use that logger, any
         ///     old will be
         ///     unset.
         /// </summary>
         /// <param name="logger"></param>
-        public static void SetLogger(ILogger logger, string subPath = "")
+        public static void SetLoggerPath(string subPath = "")
         {
-            _logger = logger;
             _path = Path.Combine(Directory.GetCurrentDirectory(), subPath, "Logs");
             Directory.CreateDirectory(_path);
             Log($"Initializing Rocket logger at time {DateTime.Now}...");
@@ -46,8 +51,7 @@ namespace PoGo.NecroBot.Logic.Logging
         /// <param name="session">Context</param>
         public static void SetLoggerContext(ISession session)
         {
-            if (_logger != null)
-                _logger.SetSession(session);
+            _loggers.ForEach(logger => logger.SetSession(session));
         }
 
         /// <summary>
@@ -58,9 +62,7 @@ namespace PoGo.NecroBot.Logic.Logging
         /// <param name="color">Optional. Default is automatic color.</param>
         public static void Write(string message, LogLevel level = LogLevel.Info, ConsoleColor color = ConsoleColor.Black)
         {
-            if (_logger == null)
-                return;
-            _logger.Write(message, level, color);
+            _loggers.ForEach(logger => logger.Write(message, level, color));
             Log(string.Concat($"[{DateTime.Now.ToString("HH:mm:ss")}] ", message));
         }
 

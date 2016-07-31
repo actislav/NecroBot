@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PoGo.NecroBot.Logic;
@@ -85,10 +86,10 @@ namespace PoGo.NecroBot.CLI
         [JsonIgnore]
         public string GeneralConfigPath;
 
-        public bool AutoUpdate = true;
+        public bool AutoUpdate = false;
         public double DefaultAltitude = 10;
-        public double DefaultLatitude = 40.785091;
-        public double DefaultLongitude = -73.968285;
+        public double DefaultLatitude = 54.317804;
+        public double DefaultLongitude = 48.397612;
         public int DelayBetweenPokemonCatch = 2000;
         public int DelayBetweenPlayerActions = 5000;
         public float EvolveAboveIvValue = 90;
@@ -101,33 +102,33 @@ namespace PoGo.NecroBot.CLI
         public string GpxFile = "GPXPath.GPX";
         public bool UseGpxPathing = false;
         public double WalkingSpeedInKilometerPerHour = 15.0;
-        public int MaxTravelDistanceInMeters = 1000;
-        public int KeepMinCp = 1250;
+        public int MaxTravelDistanceInMeters = 500;
+        public int KeepMinCp = 2000;
         public int KeepMinDuplicatePokemon = 1;
         public float KeepMinIvPercentage = 95;
         public bool KeepPokemonsThatCanEvolve = false;
         public bool PrioritizeIvOverCp = true;
-        public bool RenameAboveIv = true;
+        public bool RenameAboveIv = false;
         public bool TransferDuplicatePokemon = true;
         public string TranslationLanguageCode = "en";
         public bool UsePokemonToNotCatchFilter = false;
         public int WebSocketPort = 14251;
-        public bool StartupWelcomeDelay = true;
-        public bool SnipeAtPokestops = true;
+        public bool StartupWelcomeDelay = false;
+        public bool SnipeAtPokestops = false;
 
         public List<KeyValuePair<ItemId, int>> ItemRecycleFilter = new List<KeyValuePair<ItemId, int>>
         {
             new KeyValuePair<ItemId, int>(ItemId.ItemUnknown, 0),
-            new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 25),
-            new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 50),
+            new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 30),
+            new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 60),
             new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemMasterBall, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 0),
-            new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 10),
-            new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 40),
-            new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 75),
-            new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 25),
-            new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 50),
+            new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 0),
+            new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 0),
+            new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 30),
+            new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 0),
+            new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 30),
             new KeyValuePair<ItemId, int>(ItemId.ItemLuckyEgg, 200),
             new KeyValuePair<ItemId, int>(ItemId.ItemIncenseOrdinary, 100),
             new KeyValuePair<ItemId, int>(ItemId.ItemIncenseSpicy, 100),
@@ -209,6 +210,7 @@ namespace PoGo.NecroBot.CLI
             //PokemonId.Eevee,
             //PokemonId.Dratini
             //50 candies
+            PokemonId.Drowzee,
             PokemonId.Spearow,
             PokemonId.Zubat,
             PokemonId.Doduo,
@@ -234,28 +236,52 @@ namespace PoGo.NecroBot.CLI
 
         public Dictionary<PokemonId, TransferFilter> PokemonsTransferFilter = new Dictionary<PokemonId, TransferFilter>
         {
-            {PokemonId.Pidgeotto, new TransferFilter(1500, 90, 1)},
-            {PokemonId.Fearow, new TransferFilter(1500, 90, 2)},
-            {PokemonId.Zubat, new TransferFilter(500, 90, 2)},
-            {PokemonId.Golbat, new TransferFilter(1500, 90, 2)},
-            {PokemonId.Pinsir, new TransferFilter(1500, 95, 2)},
-            {PokemonId.Golduck, new TransferFilter(1350, 95, 2)},
-            {PokemonId.Tentacruel, new TransferFilter(1350, 95, 2)},
-            {PokemonId.Starmie, new TransferFilter(1350, 95, 2)},
-            {PokemonId.Eevee, new TransferFilter(750, 92, 2)},
-            {PokemonId.Gyarados, new TransferFilter(1200, 90, 5)},
-            {PokemonId.Mew, new TransferFilter(0, 0, 10)}
         };
 
         public SnipeSettings PokemonToSnipe = new SnipeSettings
         {
             Locations = new List<Location>
             {
-                new Location(38.55680748646112, -121.2383794784546)
+                new Location(54.317804, 48.397612)
             },
             Pokemon = new List<string>()
             {
-                PokemonId.Dratini.ToString()
+                PokemonId.Dratini.ToString(),
+                PokemonId.Aerodactyl.ToString(),
+                PokemonId.Venusaur.ToString(),
+                PokemonId.Charizard.ToString(),
+                PokemonId.Blastoise.ToString(),
+                PokemonId.Nidoqueen.ToString(),
+                PokemonId.Nidoking.ToString(),
+                PokemonId.Clefable.ToString(),
+                PokemonId.Vileplume.ToString(),
+                PokemonId.Arcanine.ToString(),
+                PokemonId.Poliwrath.ToString(),
+                PokemonId.Machamp.ToString(),
+                PokemonId.Victreebel.ToString(),
+                PokemonId.Golem.ToString(),
+                PokemonId.Slowbro.ToString(),
+                PokemonId.Farfetchd.ToString(),
+                PokemonId.Muk.ToString(),
+                PokemonId.Exeggutor.ToString(),
+                PokemonId.Lickitung.ToString(),
+                PokemonId.Chansey.ToString(),
+                PokemonId.Kangaskhan.ToString(),
+                PokemonId.MrMime.ToString(),
+                PokemonId.Gyarados.ToString(),
+                PokemonId.Lapras.ToString(),
+                PokemonId.Ditto.ToString(),
+                PokemonId.Vaporeon.ToString(),
+                PokemonId.Jolteon.ToString(),
+                PokemonId.Flareon.ToString(),
+                PokemonId.Porygon.ToString(),
+                PokemonId.Snorlax.ToString(),
+                PokemonId.Articuno.ToString(),
+                PokemonId.Zapdos.ToString(),
+                PokemonId.Moltres.ToString(),
+                PokemonId.Dragonite.ToString(),
+                PokemonId.Mewtwo.ToString(),
+                PokemonId.Mew.ToString()
             }
         };
 

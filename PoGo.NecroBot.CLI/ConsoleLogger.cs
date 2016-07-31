@@ -14,7 +14,7 @@ namespace PoGo.NecroBot.CLI
     /// </summary>
     public class ConsoleLogger : ILogger
     {
-        private readonly LogLevel _maxLogLevel;
+        private LogLevel _maxLogLevel;
         private ISession _session;
 
         /// <summary>
@@ -24,7 +24,12 @@ namespace PoGo.NecroBot.CLI
         /// <param name="maxLogLevel"></param>
         public ConsoleLogger(LogLevel maxLogLevel)
         {
-            _maxLogLevel = maxLogLevel;
+            SetMaxLogLevel(maxLogLevel);
+        }
+
+        public void SetMaxLogLevel(LogLevel logLevel)
+        {
+            _maxLogLevel = logLevel;
         }
 
         /// <summary>

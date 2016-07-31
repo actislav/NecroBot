@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using PoGo.NecroBot.Logic;
+using PoGo.NecroBot.Logic.Common;
 using PoGo.NecroBot.Logic.Event;
 using PoGo.NecroBot.Logic.Logging;
 using PoGo.NecroBot.Logic.State;
@@ -26,7 +27,9 @@ namespace PoGo.NecroBot.CLI
             if (args.Length > 0)
                 subPath = args[0];
 
-            Logger.SetLogger(new ConsoleLogger(LogLevel.Info), subPath);
+
+            Logger.SetLoggerPath(subPath);
+            Logger.AddLogger(new ConsoleLogger(LogLevel.Info));
 
             var settings = GlobalSettings.Load(subPath);
            
@@ -40,6 +43,7 @@ namespace PoGo.NecroBot.CLI
                 return;
             }
             var session = new Session(new ClientSettings(settings), new LogicSettings(settings));
+            session.Client.ApiFailure = new ApiFailureStrategy(session);
 
 
             /*SimpleSession session = new SimpleSession
@@ -65,11 +69,14 @@ namespace PoGo.NecroBot.CLI
 
             var aggregator = new StatisticsAggregator(stats);
             var listener = new ConsoleEventListener();
-            var websocket = new WebSocketInterface(settings.WebSocketPort, session.Translation);
+            var websocket = new WebSocketInterface(settings.WebSocketPort);
 
-            session.EventDispatcher.EventReceived += (IEvent evt) => listener.Listen(evt, session);
-            session.EventDispatcher.EventReceived += (IEvent evt) => aggregator.Listen(evt, session);
-            session.EventDispatcher.EventReceived += (IEvent evt) => websocket.Listen(evt, session);
+            websocket.SetSession(session);
+            websocket.SetMaxLogLevel(LogLevel.Info);
+            Logger.AddLogger(websocket);
+
+            session.EventDispatcher.EventReceived += evt => listener.Listen(evt, session);
+            session.EventDispatcher.EventReceived += evt => aggregator.Listen(evt, session);
 
             machine.SetFailureState(new LoginState());
 

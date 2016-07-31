@@ -29,7 +29,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                     ExpirationTimestampMs = incensePokemon.DisappearTimestampMs,
                     Latitude = incensePokemon.Latitude,
                     Longitude = incensePokemon.Longitude,
-                    PokemonId = (PokemonId) incensePokemon.PokemonTypeId,
+                    PokemonId = incensePokemon.PokemonId,
                     SpawnPointId = incensePokemon.EncounterLocation
                 };
 

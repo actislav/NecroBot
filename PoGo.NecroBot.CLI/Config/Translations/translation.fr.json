@@ -22,7 +22,7 @@
     },
     {
       "Key": "farmPokestopsOutsideRadius",
-      "Value": "Vous êtes en dehors de votre rayon défini! Début de la marche ({0}m de distance) dans 5 secondes. Est-ce que le fichier Coords.ini est correct?"
+      "Value": "Vous êtes en dehors de votre rayon défini! Début de la marche ({0}m de distance) dans 5 secondes. Est-ce que le fichier coords.ini est correct?"
     },
     {
       "Key": "farmPokestopsNoUsableFound",
@@ -210,11 +210,11 @@
     },
     {
       "Key": "notRealisticTravel",
-      "Value": "Chemin irréaliste détecté à {0}, utilisation des coordonnées sauvegardées dans le fichier Coords.ini"
+      "Value": "Chemin irréaliste détecté à {0}, utilisation des coordonnées sauvegardées dans le fichier coords.ini"
     },
     {
       "Key": "coordinatesAreInvalid",
-      "Value": "Les coordonnées définies dans le fichier \"Coords.ini\" sont invalides, utilisation des coordonées par défaut"
+      "Value": "Les coordonnées définies dans le fichier \"coords.ini\" sont invalides, utilisation des coordonées par défaut"
     },
     {
       "Key": "gotUpToDateVersion",

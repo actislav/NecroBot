@@ -250,11 +250,11 @@
     },
     {
       "Key": "notRealisticTravel",
-      "Value": "Keine realistische Bewegung bei {0}, benutze zuletzt gespeicherte Daten aus Coords.ini"
+      "Value": "Keine realistische Bewegung bei {0}, benutze zuletzt gespeicherte Daten aus coords.ini"
     },
     {
       "Key": "coordinatesAreInvalid",
-      "Value": "Koordinaten in \"Coords.ini\" sind ungültig! Benutze standart Koordinaten."
+      "Value": "Koordinaten in \"coords.ini\" sind ungültig! Benutze standart Koordinaten."
     },
     {
       "Key": "gotUpToDateVersion",

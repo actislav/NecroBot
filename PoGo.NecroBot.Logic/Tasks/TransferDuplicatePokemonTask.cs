@@ -36,23 +36,22 @@ namespace PoGo.NecroBot.Logic.Tasks
                 await session.Client.Inventory.TransferPokemon(duplicatePokemon.Id);
                 await session.Inventory.DeletePokemonFromInvById(duplicatePokemon.Id);
 
-                var bestPokemonOfType = (session.LogicSettings.PrioritizeIvOverCp
-                    ? await session.Inventory.GetHighestPokemonOfTypeByIv(duplicatePokemon)
-                    : await session.Inventory.GetHighestPokemonOfTypeByCp(duplicatePokemon)) ?? duplicatePokemon;
+                var bestPokemonOfTypeIv = await session.Inventory.GetHighestPokemonOfTypeByIv(duplicatePokemon) ?? duplicatePokemon;
+                var bestPokemonOfTypeCp = await session.Inventory.GetHighestPokemonOfTypeByCp(duplicatePokemon) ?? duplicatePokemon;
 
                 var setting = pokemonSettings.Single(q => q.PokemonId == duplicatePokemon.PokemonId);
                 var family = pokemonFamilies.First(q => q.FamilyId == setting.FamilyId);
 
-                family.Candy++;
+                family.Candy_++;
 
                 session.EventDispatcher.Send(new TransferPokemonEvent
                 {
                     Id = duplicatePokemon.PokemonId,
                     Perfection = PokemonInfo.CalculatePokemonPerfection(duplicatePokemon),
                     Cp = duplicatePokemon.Cp,
-                    BestCp = bestPokemonOfType.Cp,
-                    BestPerfection = PokemonInfo.CalculatePokemonPerfection(bestPokemonOfType),
-                    FamilyCandies = family.Candy
+                    BestCp = bestPokemonOfTypeCp.Cp,
+                    BestPerfection = PokemonInfo.CalculatePokemonPerfection(bestPokemonOfTypeIv),
+                    FamilyCandies = family.Candy_
                 });
 
                 DelayingUtils.Delay(session.LogicSettings.DelayBetweenPlayerActions, 0);

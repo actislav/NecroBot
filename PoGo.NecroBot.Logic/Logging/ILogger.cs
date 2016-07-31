@@ -9,6 +9,7 @@ namespace PoGo.NecroBot.Logic.Logging
 {
     public interface ILogger
     {
+        void SetMaxLogLevel(LogLevel logLevel);
         /// <summary>
         ///     Log a specific message by LogLevel.
         /// </summary>

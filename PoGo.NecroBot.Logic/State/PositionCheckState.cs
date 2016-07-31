@@ -1,6 +1,7 @@
 ﻿#region using directives
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using PoGo.NecroBot.Logic.Common;
@@ -15,8 +16,8 @@ namespace PoGo.NecroBot.Logic.State
     {
         public async Task<IState> Execute(ISession session)
         {
-            var coordsPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "Configs" +
-                             Path.DirectorySeparatorChar + "Coords.ini";
+            var coordsPath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "config" +
+                             Path.DirectorySeparatorChar + "coords.ini";
             if (File.Exists(coordsPath))
             {
                 var latLngFromFile = LoadPositionFromDisk(session);
@@ -35,7 +36,7 @@ namespace PoGo.NecroBot.Logic.State
                             var kmph = distance/1000/(double) hoursSinceModified;
                             if (kmph < 80) // If speed required to get to the default location is < 80km/hr
                             {
-                                File.Delete(coordsPath);
+//                                File.Delete(coordsPath);
                                 session.EventDispatcher.Send(new WarnEvent
                                 {
                                     Message = session.Translation.GetTranslation(TranslationString.RealisticTravelDetected)
@@ -43,12 +44,16 @@ namespace PoGo.NecroBot.Logic.State
                             }
                             else
                             {
+                                //session.Client.CurrentLatitude = lat;
+                               // session.Client.CurrentLongitude = lng;
                                 session.EventDispatcher.Send(new WarnEvent
                                 {
                                     Message =session.Translation.GetTranslation(TranslationString.NotRealisticTravel, kmph)
                                 });
                             }
                         }
+                        session.Client.Player.SetCoordinates(latLngFromFile.Item1, latLngFromFile.Item2, session.Settings.DefaultAltitude, false);
+
                         await Task.Delay(200);
                     }
                 }
@@ -68,21 +73,21 @@ namespace PoGo.NecroBot.Logic.State
         private static Tuple<double, double> LoadPositionFromDisk(ISession session)
         {
             if (
-                File.Exists(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "Configs" +
-                            Path.DirectorySeparatorChar + "Coords.ini") &&
-                File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "Configs" +
-                                 Path.DirectorySeparatorChar + "Coords.ini").Contains(":"))
+                File.Exists(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "config" +
+                            Path.DirectorySeparatorChar + "coords.ini") &&
+                File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "config" +
+                                 Path.DirectorySeparatorChar + "coords.ini").Contains(","))
             {
                 var latlngFromFile =
-                    File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "Configs" +
-                                     Path.DirectorySeparatorChar + "Coords.ini");
-                var latlng = latlngFromFile.Split(':');
+                    File.ReadAllText(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "config" +
+                                     Path.DirectorySeparatorChar + "coords.ini");
+                var latlng = latlngFromFile.Split(',');
                 if (latlng[0].Length != 0 && latlng[1].Length != 0)
                 {
                     try
                     {
-                        var latitude = Convert.ToDouble(latlng[0]);
-                        var longitude = Convert.ToDouble(latlng[1]);
+                        var latitude = Convert.ToDouble(latlng[0], CultureInfo.InvariantCulture);
+                        var longitude = Convert.ToDouble(latlng[1], CultureInfo.InvariantCulture);
 
                         if (Math.Abs(latitude) <= 90 && Math.Abs(longitude) <= 180)
                         {

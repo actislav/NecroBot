@@ -22,7 +22,7 @@
     },
     {
       "Key": "farmPokestopsOutsideRadius",
-      "Value": "Buiten het ingestelde bereik beland! Terug naar beginpunt ({0}m away) in 5 seconden. Klopt je Coords.ini bestand?"
+      "Value": "Buiten het ingestelde bereik beland! Terug naar beginpunt ({0}m away) in 5 seconden. Klopt je coords.ini bestand?"
     },
     {
       "Key": "farmPokestopsNoUsableFound",

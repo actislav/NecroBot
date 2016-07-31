@@ -23,7 +23,7 @@
     {
       "Key": "farmPokestopsOutsideRadius",
       "Value":
-        "Znajdujesz się poza zdefiniowanym rejonem! Wracam się na początek ({0}m away) za 5 sekund. Czy twój plik Coords.ini się zgadza?"
+        "Znajdujesz się poza zdefiniowanym rejonem! Wracam się na początek ({0}m away) za 5 sekund. Czy twój plik coords.ini się zgadza?"
     },
     {
       "Key": "farmPokestopsNoUsableFound",
